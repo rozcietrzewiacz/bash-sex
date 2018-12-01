@@ -1,0 +1,58 @@
+#!/bin/bash
+###############
+# This is a bash-sex plugin. It is meant to be sourced by invoking
+# the "sex" bash function.
+#
+
+sex_cd()
+{
+  case "$1" in
+    --init)
+      echo "Initializing local history file"
+      touch ./.bash_hist-here
+      _sex_cd_try_local
+      ;;
+    *)
+      #TODO: Think of a (convncing) proper usage
+      echo "Usage: \"sex_cd --init\"      -> initialize and use local history file"
+      ;;
+  esac
+}
+
+
+_local_hist_aware_cd()
+{
+  \cd "$@" || return
+  _sex_cd_try_local
+}
+  
+_sex_cd_try_local()
+{
+  ## XXX show the bug that was here:
+  [ "$HISTFILE" -ef ./.bash_hist-here ] && return
+
+  if [ -f ./.bash_history ]
+  then target=.bash_history
+  else target=.bash_hist-here
+  fi
+
+  [ -f $target ] || return 
+
+  echo "== Local bash history file found in $target =="
+  echo " => CWD: $(pwd)"
+  echo " => Entries in active history: $(history | tail -n1 | awk '{ print $1 }')"
+  echo " => Entries in local history: $(wc -l ./$target | awk '{ print $1 }')"
+  echo
+
+  if confirm " > Flush active history and use local?"; then
+    history -w
+    export HISTFILE=$(pwd)/$target
+    history -c
+    history -r
+    #TODO: set a visual indicator on the PS1 prompt!
+  else
+    return
+  fi
+}
+
+alias cd="_local_hist_aware_cd"

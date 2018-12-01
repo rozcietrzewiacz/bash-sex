@@ -1,0 +1,15 @@
+#!/bin/bash
+###############
+# This is a bash-sex plugin. It is meant to be sourced by invoking
+# the "sex" bash function.
+#
+#NOTE: for modularity and composability purposes, each plugin file
+# should only contain a single function/alias
+###############
+
+## md: just a shorthand for mkdir + cd into the new dir ##
+
+# Create a new directory and enter it
+md() 
+{  [[ $# = 1 ]] && mkdir -p "$1" && cd "$1"; }
+

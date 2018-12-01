@@ -1,0 +1,20 @@
+
+  function confirm
+  {
+    local yes_no_question=$1
+    #Ahh, the applicable beauty of bash logic...
+    local True=0
+    local False=1
+
+    #alias ask=read
+    read -p "$yes_no_question [Y/n] "
+      case "$REPLY" in
+        n|N)
+          return $False
+        ;;
+        y|Y|*) #Yes, this stands for "anything else"
+          return $True
+        ;;
+      esac
+  }
+
