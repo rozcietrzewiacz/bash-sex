@@ -3,6 +3,8 @@
 # This is a bash-sex plugin. It is meant to be sourced by invoking
 # the "sex" bash function.
 #
+###
+# This plugin enables local bash history, activated on entering a directory
 
 sex_cd()
 {
@@ -31,9 +33,10 @@ _sex_cd_try_local()
   ## XXX show the bug that was here:
   [ "$HISTFILE" -ef ./.bash_hist-here ] && return
 
-  if [ -f ./.bash_history ]
-  then target=.bash_history
-  else target=.bash_hist-here
+  if [ -f ./.bash_history ]; then
+      local target=.bash_history
+  else
+      local target=.bash_hist-here
   fi
 
   [ -f $target ] || return 
