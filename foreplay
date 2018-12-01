@@ -40,9 +40,13 @@ function sex
       confirm "View sex_cd?" && view ~/.config/bash-sex/plugins/local-history.sex
       ;;
     *)
-      echo "Huh? What you have in mind?"
-      echo " Usage: "
-      echo " sex --yes    - load all plugins"
-      #TODO
+      cat << EOMSG
+Huh? What do you have in mind?
+Usage:
+  sex --yes         - load all plugins
+      --ask-once    - list plugins and ask before loading all of them
+      --ask-each    - itearate through all plugins and ask before loading each
+      --help        - get some more tips
+EOMSG
   esac
 }
