@@ -32,6 +32,8 @@ _sex_cd_try_local()
 {
   ## XXX show the bug that was here:
   [ "$HISTFILE" -ef ./.bash_hist-here ] && return
+  # Don't use within mc!
+  [ "$MC_SID" ] && return
 
   if [ -f ./.bash_history ]; then
       local target=.bash_history
