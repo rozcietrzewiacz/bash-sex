@@ -24,16 +24,16 @@ sex_cd()
 
 _local_hist_aware_cd()
 {
-  \cd "$@" || return
+  \cd "$@" || return 11
   _sex_cd_try_local
 }
   
 _sex_cd_try_local()
 {
   ## XXX show the bug that was here:
-  [ "$HISTFILE" -ef ./.bash_hist-here ] && return
+  [ "$HISTFILE" -ef ./.bash_hist-here ] && return 0
   # Don't use within mc!
-  [ "$MC_SID" ] && return
+  [ "$MC_SID" ] && return 22
 
   if [ -f ./.bash_history ]; then
       local target=.bash_history
@@ -41,7 +41,7 @@ _sex_cd_try_local()
       local target=.bash_hist-here
   fi
 
-  [ -f $target ] || return 
+  [ -f $target ] || return 0
 
   echo "== Local bash history file found in $target =="
   echo " => CWD: $(pwd)"
@@ -56,7 +56,7 @@ _sex_cd_try_local()
     history -r
     #TODO: set a visual indicator on the PS1 prompt!
   else
-    return
+    return 23
   fi
 }
 

@@ -6,7 +6,8 @@ function confirm
 {
   local yes_no_question=$1
 
-  read -p "$yes_no_question [Y/n] "
+  echo -n "$yes_no_question [Y/n] "
+  read
   case "$REPLY" in
     n|N)
       return $False

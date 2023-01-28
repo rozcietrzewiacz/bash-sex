@@ -8,7 +8,7 @@ function sex
   function load_sex_plugins
   {
       for plugin in ~/.config/bash-sex/plugins/*.sex; do
-      if [ "$1" == "ASK" ]; then
+      if [ "$1" = "ASK" ]; then
         confirm "load $plugin" && \
         source "$plugin"
       else
