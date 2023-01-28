@@ -1,0 +1,39 @@
+
+kex () 
+{ 
+    local dotArgs=$(echo "$@" | tr ' ' '.');
+    ev="kubectl explain $dotArgs";
+    echo "# $ev";
+    $ev
+}
+
+_kex_comp () 
+{ 
+    function _kex_dbg() { [ $DEBUG ] && echo $@; }
+
+    # cw - index of the last completed word
+    local cw=$[ COMP_CWORD - 1 ]
+    _kex_dbg
+    _kex_dbg "COMP_CWORD           => $COMP_CWORD"
+    _kex_dbg "============================================="
+    _kex_dbg "COMP_WORDS[@]        => ${COMP_WORDS[@]}"
+    _kex_dbg "COMP_WORDS[@]:1      => ${COMP_WORDS[@]:1}"
+    _kex_dbg "COMP_WORDS[@]:1:cm   => ${COMP_WORDS[@]:1:${cw}}"
+
+    #On the first word, use the completions of `kubectl get`
+    if [ $COMP_CWORD -eq 1 ]
+    then
+      COMPREPLY=( $(kubectl __complete get "${COMP_WORDS[@]:1}" 2>/dev/null) )
+      ## XXX The above is a hack that uses kubectl's internal completion function. Unfortunately,
+      ##  that function returns something like ':4' as the last result, so we remove it:
+      unset 'COMPREPLY[${#COMPREPLY[@]}-1]'
+      return
+    fi
+
+    local concat=$( <<<${COMP_WORDS[@]:1:${cw}} tr ' ' '.' )
+    local words=$( kubectl explain $concat --recursive | grep -E '^ {3}[^ ]' | awk '{ print $1 }' )
+    COMPREPLY=( $(compgen -W "$words" "${COMP_WORDS[$COMP_CWORD]}") )
+    unset _kex_dbg
+}
+
+complete -F _kex_comp kex
